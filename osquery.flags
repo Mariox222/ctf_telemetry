@@ -1,0 +1,4 @@
+--config_plugin=filesystem
+--config_path=/etc/osquery/osquery.conf
+--disable_events=false
+--enable_file_events=true
