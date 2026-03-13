@@ -16,8 +16,8 @@ JOIN users
 ON users.uid = shell_history.uid 
 WHERE users.username = 'kali';
 
--- python packages
+-- python packages 
 SELECT * FROM python_packages JOIN users ON users.uid = python_packages.uid WHERE users.username = 'kali' LIMIT 10;
 
--- socket events
-SELECT * FROM bpf_socket_events;
+-- socket events 
+SELECT * FROM bpf_socket_events WHERE remote_address LIKE "%.%.%.%" OR remote_address LIKE "%:%:%" ORDER BY time DESC LIMIT 30;
