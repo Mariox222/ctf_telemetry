@@ -1,0 +1,14 @@
+filebeat.inputs:
+  - type: filestream
+    enabled: true
+    paths:
+      - /var/log/osquery/osqueryd.results.log
+    parsers:
+      - ndjson: {}  
+
+output.elasticsearch:
+  hosts: ["http://51.107.3.131:9200"]
+  username: "filebeat_user"
+  password: "${FILE_BEAT_USER_PASSWORD}"
+
+setup.ilm.enabled: false
