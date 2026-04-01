@@ -20,7 +20,7 @@ The setup script reads your passwords and compose config from the local director
 
 Docker must be installed before running the setup script. If it's not present, the script will exit with an error.
 
-Install Docker on Debian/Ubuntu:
+Install Docker on Ubuntu:
 
 ```bash
 chmod +x install-docker.sh
@@ -32,6 +32,17 @@ chmod +x install-docker.sh
 ## 3. Generate Passwords and Edit `.env`
 
 Before running the installer, you need to fill in the three passwords in `.env`.
+
+**Option A — Automatic (recommended)**
+
+```bash
+chmod +x generate-passwords.sh
+./generate-passwords.sh
+```
+
+This generates strong random passwords and writes them directly into `.env`.
+
+**Option B — Manual**
 
 Generate a strong password by running this command — do it once per password:
 
@@ -47,7 +58,7 @@ KIBANA_PASSWORD=<paste here>
 FILEBEAT_USER_PASSWORD=<paste here>
 ```
 
-The script will refuse to run if any password is missing or still set to the default placeholder value.
+The install script will refuse to run if any password is missing or still set to the default placeholder value.
 
 ---
 

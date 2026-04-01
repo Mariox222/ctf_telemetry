@@ -2,7 +2,7 @@
 # =============================================================================
 # Elasticsearch + Kibana Test Script
 # 1. export the password enviroment variables to your enviroment with
-#   export $(grep -v '^#' "$SCRIPT_DIR/.env" | xargs)
+#   export $(grep -v '^#' ".env" | xargs)
 # 2. export your public IP variable if you want to test externall access with
 #   PUBLIC_IP="<YOUR_PUBLIC_IP>"
 # 3. copy and paste the test commands you want into the terminal

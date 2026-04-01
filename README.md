@@ -30,7 +30,7 @@ Check if docker compose is present:
 docker compose version
 ```
 
-For installing on debian systems, you can use the provided script:
+For installing on Ubuntu, you can use the provided script:
 
 ```bash
 chmod +x install-docker.sh
