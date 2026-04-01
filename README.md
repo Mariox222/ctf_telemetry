@@ -100,4 +100,4 @@ http://<YOUR_SERVER_PUBLIC_IP>:5601
 
 Login with username `elastic` and the ELASTIC_PASSWORD password from `.env`.
 
-> For more tests see the Testing section in `elastic-setup/readme.md`.
+> For more tests see the [Testing section](https://github.com/Mariox222/ctf_telemetry/tree/main/elastic-setup#6-testing) in `elastic-setup/readme.md`.
