@@ -6,7 +6,7 @@ A scripted setup for a single-node Elasticsearch + Kibana stack running in Docke
 
 ## 1. Description
 
-This repo sets up the following on a fresh Ubuntu VM:
+This repo sets up the following on a fresh linux system:
 
 - Elasticsearch 8.12.0 (single node, security enabled)
 - Kibana 8.12.0
