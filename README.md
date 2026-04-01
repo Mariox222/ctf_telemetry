@@ -75,4 +75,29 @@ chmod +x install.sh
 ./install.sh
 ```
 
-> See `elastic-setup/readme.md` for full documentation.
+**6. Verify the setup**
+
+Export passwords into your shell session:
+
+```bash
+export $(grep -v '^#' .env | xargs)
+```
+
+Check Elasticsearch is up:
+
+```bash
+curl -u elastic:$ELASTIC_PASSWORD http://localhost:9200
+```
+
+Expected: cluster info JSON.
+
+
+Open Kibana in your browser:
+
+```
+http://<YOUR_SERVER_PUBLIC_IP>:5601
+```
+
+Login with username `elastic` and the ELASTIC_PASSWORD password from `.env`.
+
+> For more tests see the Testing section in `elastic-setup/readme.md`.
