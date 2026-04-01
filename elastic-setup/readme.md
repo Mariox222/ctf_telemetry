@@ -8,7 +8,6 @@ A scripted setup for a single-node Elasticsearch + Kibana stack running in Docke
 
 This repo sets up the following on a fresh Ubuntu VM:
 
-- Docker (installed from the official Docker repo)
 - Elasticsearch 8.12.0 (single node, security enabled)
 - Kibana 8.12.0
 - A `filebeat_writer` role and `filebeat_user` for Filebeat log ingestion
@@ -17,7 +16,20 @@ The setup script reads your passwords and compose config from the local director
 
 ---
 
-## 2. Generate Passwords and Edit `.env`
+## 2. Prerequisites — Install Docker
+
+Docker must be installed before running the setup script. If it's not present, the script will exit with an error.
+
+Install Docker on Debian/Ubuntu:
+
+```bash
+chmod +x install-docker.sh
+./install-docker.sh
+```
+
+---
+
+## 3. Generate Passwords and Edit `.env`
 
 Before running the installer, you need to fill in the three passwords in `.env`.
 
@@ -39,7 +51,7 @@ The script will refuse to run if any password is missing or still set to the def
 
 ---
 
-## 3. Install
+## 4. Install
 
 Make the script executable and run it:
 
@@ -52,14 +64,14 @@ The script will install Docker, configure the kernel, copy your config files, st
 
 ---
 
-## 4. Testing
+## 5. Testing
 
 Open `test.sh` and read through the available tests before running anything. Each test is commented out with a description of what it checks and what the expected result is.
 
 
 ---
 
-## 5. Troubleshooting
+## 6. Troubleshooting
 
 ### "Kibana server is not ready yet"
 

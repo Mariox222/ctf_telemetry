@@ -65,45 +65,15 @@ KIBANA_SYSTEM_PASSWORD="$KIBANA_PASSWORD"
 success ".env loaded and all passwords look good."
 
 # =============================================================================
-# STEP 1 - Install Docker (official repo)
+# STEP 1 - Check Docker is installed
 # =============================================================================
 
-info "Installing Docker..."
+info "Checking for Docker..."
 
-if command -v docker &>/dev/null; then
-  success "Docker already installed: $(docker --version)"
-else
-  sudo apt-get update -y
-  sudo apt-get install -y ca-certificates curl gnupg
+command -v docker &>/dev/null \
+  || die "Docker is not installed. Install it first — see the README for instructions."
 
-  sudo install -m 0755 -d /etc/apt/keyrings
-  curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
-    | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-  sudo chmod a+r /etc/apt/keyrings/docker.gpg
-
-  echo \
-    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
-    https://download.docker.com/linux/ubuntu \
-    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" \
-    | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-  sudo apt-get update -y
-  sudo apt-get install -y \
-    docker-ce docker-ce-cli containerd.io \
-    docker-buildx-plugin docker-compose-plugin
-
-  sudo systemctl enable docker
-  sudo systemctl start docker
-
-  success "Docker installed."
-fi
-
-# Add current user to docker group (takes effect on next login)
-if ! groups "$USER" | grep -q docker; then
-  info "Adding $USER to docker group..."
-  sudo usermod -aG docker "$USER"
-  warn "You may need to log out and back in (or run 'newgrp docker') for group changes to take effect."
-fi
+success "Docker found: $(docker --version)"
 
 # =============================================================================
 # STEP 2 - Kernel tuning for Elasticsearch
