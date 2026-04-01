@@ -20,9 +20,22 @@
 # 2. FIREWALL
 # =============================================================================
 
-# Show all active UFW firewall rules.
-# Expected: port 9200 should be listed as ALLOW if you want external access,
+# NOTE: UFW is bypassed by Docker. Docker modifies iptables directly, so UFW
+# rules do NOT restrict Docker port bindings. Use your cloud provider's
+# firewall/security group to control external access to port 9200.
+
+# Show UFW status (informational only — does not reflect actual Docker exposure).
 # sudo ufw status verbose
+
+# Check what ports Docker is actually exposing on the host.
+# Expected: you should see 0.0.0.0:9200 and 0.0.0.0:5601 listed.
+# If Elasticsearch is bound to 127.0.0.1:9200 in docker-compose.yml it will show that instead.
+# sudo docker ps --format "table {{.Names}}\t{{.Ports}}"
+
+# External connectivity test — checks if port 9200 is reachable from the internet.
+# Expected: should FAIL / time out if your cloud firewall is blocking external access.
+# If it returns HTTP 401, port 9200 is publicly exposed (may be intentional for Filebeat).
+# curl http://${PUBLIC_IP}:9200
 
 # =============================================================================
 # 3. ELASTICSEARCH CONNECTIVITY
@@ -36,11 +49,6 @@
 # Authenticated request to Elasticsearch using the elastic superuser.
 # Expected: cluster info JSON with cluster_name, version, etc.
 # curl -u elastic:$ELASTIC_PASSWORD http://localhost:9200
-
-# External connectivity test — checks if port 9200 is reachable from the internet.
-# Expected: should FAIL / time out if your firewall is correctly blocking external access.
-# If it returns error 401 missing authentication, port 9200 is publicly exposed
-# curl http://${PUBLIC_IP}:9200
 
 # =============================================================================
 # 4. INTERNAL NETWORK (KIBANA -> ELASTICSEARCH)

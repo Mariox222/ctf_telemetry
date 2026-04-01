@@ -64,14 +64,40 @@ The script will install Docker, configure the kernel, copy your config files, st
 
 ---
 
-## 5. Testing
+## 5. Firewall
+
+### The UFW problem
+
+UFW is **not effective** for restricting Docker ports. Docker modifies iptables directly and bypasses UFW rules. Even if UFW shows port 9200 as blocked, Elasticsearch will still be publicly reachable.
+
+To actually restrict external access you have two options:
+
+**Option A — Cloud provider firewall (recommended)**
+
+Use your cloud provider's firewall/security group rules to control which IPs can reach port 9200. By default most providers only allow SSH (port 22). To allow Filebeat from a Kali host to ship logs, open port 9200 inbound from the Kali host's IP only.
+
+**Option B — Bind Elasticsearch to localhost**
+
+In `docker-compose.yml`, change the Elasticsearch port binding from `9200:9200` to `127.0.0.1:9200:9200`. This makes Elasticsearch unreachable from outside the VM entirely. Use this if you don't need external access to port 9200.
+
+### Port reference
+
+| Port | Service | Who needs access |
+|------|---------|-----------------|
+| 22 | SSH | your machine |
+| 9200 | Elasticsearch | Kali host running Filebeat |
+| 5601 | Kibana | your browser |
+
+---
+
+## 6. Testing
 
 Open `test.sh` and read through the available tests before running anything. Each test is commented out with a description of what it checks and what the expected result is.
 
 
 ---
 
-## 6. Troubleshooting
+## 7. Troubleshooting
 
 ### "Kibana server is not ready yet"
 
