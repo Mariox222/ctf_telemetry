@@ -103,8 +103,97 @@ In `docker-compose.yml`, change the Elasticsearch port binding from `9200:9200` 
 
 ## 6. Testing
 
-Open `test.sh` and read through the available tests before running anything. Each test is commented out with a description of what it checks and what the expected result is.
+Before running any test, export your passwords into the current shell session:
 
+```bash
+export $(grep -v '^#' ".env" | xargs)
+```
+
+### Container status
+
+Check which containers are running and their current status.
+Expected: elasticsearch and kibana both show as "Up" with no restarts.
+
+```bash
+docker ps
+```
+
+### Firewall — exposed ports
+
+Check what ports Docker is actually exposing on the host.
+Expected: `0.0.0.0:9200` and `0.0.0.0:5601` listed (or `127.0.0.1:9200` if bound to localhost).
+
+```bash
+sudo docker ps --format "table {{.Names}}\t{{.Ports}}"
+```
+
+UFW status (informational only — does not reflect actual Docker exposure):
+
+```bash
+sudo ufw status verbose
+```
+
+### Elasticsearch — unauthenticated
+
+Expected: HTTP 401 Unauthorized — confirms security is enabled. You should NOT get cluster info JSON back without credentials.
+
+```bash
+curl http://localhost:9200
+```
+
+### Elasticsearch — authenticated
+
+Expected: cluster info JSON with `cluster_name`, `version`, etc.
+
+```bash
+curl -u elastic:$ELASTIC_PASSWORD http://localhost:9200
+```
+
+### Internal network (Kibana → Elasticsearch)
+
+Runs curl from inside the Kibana container against Elasticsearch using the internal Docker network hostname.
+Expected: cluster info JSON — confirms Kibana can reach Elasticsearch internally.
+
+```bash
+docker exec -it kibana curl -u elastic:$ELASTIC_PASSWORD http://elasticsearch:9200
+```
+
+### Security objects
+
+Check whether `filebeat_user` was created successfully.
+Expected: JSON with `"username": "filebeat_user"`, `"roles": ["filebeat_writer"]`, `"enabled": true`.
+
+```bash
+curl -u elastic:$ELASTIC_PASSWORD "http://localhost:9200/_security/user/filebeat_user?pretty"
+```
+
+### Indices
+
+List all indices. After Filebeat starts shipping logs you will see indices whose names start with `filebeat-`. If no logs have been received yet, no filebeat indices will appear — that is normal.
+
+```bash
+curl -u elastic:$ELASTIC_PASSWORD "http://localhost:9200/_cat/indices?v"
+```
+
+Search all documents in filebeat indices. Returns log documents or `hits.total: 0` if no logs have arrived yet.
+
+```bash
+curl -u elastic:$ELASTIC_PASSWORD "http://localhost:9200/filebeat-*/_search?pretty"
+```
+
+### Docker logs
+
+Stream live Kibana logs — useful for watching startup and auth errors. Press Ctrl+C to stop.
+
+```bash
+docker logs -f kibana
+```
+
+Stream live Elasticsearch logs:
+
+```bash
+docker logs -f elasticsearch
+```
 
 ---
 
