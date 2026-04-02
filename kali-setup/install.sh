@@ -6,10 +6,10 @@
 # Starting image: kali-linux-2025.4-virtualbox-amd64
 #
 # Before running:
-#   1. Edit filebeat.yml with the server IP and filebeat_user password
+#   1. Edit filebeat-template.yml with the server IP and filebeat_user password
 #   2. Place all required files in the same directory as this script (see preflight)
-#   3. chmod +x setup-kali.sh
-#   4. sudo ./setup-kali.sh
+#   3. chmod +x install.sh
+#   4. sudo ./install.sh
 #
 # After running, see README for optional manual steps (keyboard layout, VS Code).
 # =============================================================================
@@ -49,8 +49,8 @@ info "Checking required files..."
 [[ -f "$SCRIPT_DIR/osquery.flags" ]] \
   || die "osquery.flags not found in $SCRIPT_DIR."
 
-[[ -f "$SCRIPT_DIR/filebeat.yml" ]] \
-  || die "filebeat.yml not found in $SCRIPT_DIR. Edit it with server IP and password before running."
+[[ -f "$SCRIPT_DIR/filebeat-template.yml" ]] \
+  || die "filebeat-template.yml not found in $SCRIPT_DIR. Edit it with server IP and password before running."
 
 success "All required files found."
 
@@ -135,7 +135,7 @@ success "filebeat installed: $(filebeat version)"
 
 info "Configuring filebeat..."
 
-cp "$SCRIPT_DIR/filebeat.yml" /etc/filebeat/filebeat.yml
+cp "$SCRIPT_DIR/filebeat-template.yml" /etc/filebeat/filebeat.yml
 
 # Clear registry so filebeat ships all logs fresh on first start
 rm -rf /var/lib/filebeat/registry

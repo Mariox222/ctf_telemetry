@@ -1,0 +1,21 @@
+filebeat.inputs:
+  - type: filestream
+    enabled: true
+    paths:
+      - /var/log/osquery/osqueryd.results.log
+    parsers:
+      - ndjson: {}
+
+processors:
+  - add_fields:
+      target: ''  # empty string places fields at the root of the document instead of nested under "fields.*"
+      fields:
+        participant_id: "PARTICIPANT_ID"
+        machine_id: "MACHINE_ID"
+
+output.elasticsearch:
+  hosts: ["http://<paste elastic server IP here>:9200"]
+  username: "filebeat_user"
+  password: "<paste filebeat user password here>"
+
+setup.ilm.enabled: false
