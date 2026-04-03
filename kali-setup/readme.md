@@ -22,19 +22,7 @@ Before running the install script, make sure all of the following are in the sam
 
 ---
 
-### 2. Download osquery
-
-Download the osquery `.deb` package from the official osquery release page:
-
-```
-https://github.com/osquery/osquery/releases/tag/5.21.0
-```
-
-Look for `osquery_5.21.0-1.linux_amd64.deb` under Assets and download it into the same directory as the script.
-
----
-
-### 3. Edit filebeat-template.yml
+### 2. Edit filebeat-template.yml
 
 Open `filebeat-template.yml` and fill in two values before running the script:
 
@@ -54,7 +42,7 @@ Save the file. The script copies it as-is to `/etc/filebeat/filebeat.yml`.
 
 ---
 
-### 4. Install
+### 3. Install
 
 Make the script executable and run it as root:
 
@@ -67,7 +55,7 @@ The script will update the system, install osquery and filebeat, copy all config
 
 ---
 
-### 5. Verify
+### 4. Verify
 
 After the script finishes, check that filebeat can reach the server:
 
@@ -79,7 +67,7 @@ Expected result: `talk to server... OK`
 
 ---
 
-### 6. Export .ova
+### 5. Export .ova
 
 Once verified, export the VM as an `.ova` file from VirtualBox and distribute it to participants.
 

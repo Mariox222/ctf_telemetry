@@ -1,0 +1,6 @@
+--config_plugin=filesystem
+--config_path=/etc/osquery/osquery.conf
+--disable_events=false
+--enable_file_events=true
+--extension /etc/osquery/macadmins_extension.amd64.ext
+--enable_bpf_events=true
