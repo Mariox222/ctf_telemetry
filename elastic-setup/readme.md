@@ -64,18 +64,52 @@ The install script will refuse to run if any password is missing or still set to
 
 ## 4. Install
 
+Make sure you are in the `elastic-setup` directory:
+
+```bash
+cd elastic-setup
+```
+
 Make the script executable and run it:
 
 ```bash
-chmod +x setup-elastic.sh
-./setup-elastic.sh
+chmod +x install.sh
+./install.sh
 ```
 
-The script will install Docker, configure the kernel, copy your config files, start the stack, set all passwords, and create the Filebeat user and role. Docker containers will run on startup.
+The script will configure the kernel, copy your config files, start the stack, set all passwords, and create the Filebeat user and role. Docker containers will run on startup.
 
 ---
 
-## 5. Firewall
+## 5. Quick Verify
+
+Export passwords into your shell session:
+
+```bash
+export $(grep -v '^#' .env | xargs)
+```
+
+Check Elasticsearch is up and authenticated:
+
+```bash
+curl -u elastic:$ELASTIC_PASSWORD http://localhost:9200
+```
+
+Expected: cluster info JSON.
+
+Open Kibana in your browser:
+
+```
+http://<YOUR_SERVER_PUBLIC_IP>:5601
+```
+
+Login with username `elastic` and the `ELASTIC_PASSWORD` from `.env`.
+
+> For more tests see the [Testing section](#8-testing) below.
+
+---
+
+## 7. Firewall
 
 ### The UFW problem
 
@@ -101,7 +135,7 @@ In `docker-compose.yml`, change the Elasticsearch port binding from `9200:9200` 
 
 ---
 
-## 6. Testing
+## 8. Testing
 
 Before running any test, export your passwords into the current shell session:
 
@@ -197,7 +231,7 @@ docker logs -f elasticsearch
 
 ---
 
-## 7. Troubleshooting
+## 9. Troubleshooting
 
 ### "Kibana server is not ready yet"
 
