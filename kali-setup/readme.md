@@ -2,15 +2,21 @@
 
 Sets up osquery + filebeat on a fresh Kali Linux VM to send telemetry to the Elasticsearch server.
 
-There are two roles: the **organizer** sets up and exports the VM, the **participant** imports it and runs the start script.
+> The full instalation can be left to the participants, or the organizer can pre-configure the VM (steps 1-6) and export it as an `.ova` (for virtualbox) and have the participants import the VM and run the start.sh (step 7.) once imported.
 
 ---
 
-## Organizer Workflow
+## 1. Go to the kali-setup folder
 
-### 1. Required Files
+```bash
+cd kali-setup
+```
 
-Before running the install script, make sure all of the following are in the same directory:
+---
+
+## 2. Required Files
+
+Make sure all of the following are in the same directory:
 
 - `install.sh`
 - `osquery_5.21.0-1.linux_amd64.deb`
@@ -22,7 +28,7 @@ Before running the install script, make sure all of the following are in the sam
 
 ---
 
-### 2. Edit filebeat-template.yml
+## 3. Edit filebeat-template.yml
 
 Open `filebeat-template.yml` and fill in two values before running the script:
 
@@ -42,7 +48,7 @@ Save the file. The script copies it as-is to `/etc/filebeat/filebeat.yml`.
 
 ---
 
-### 3. Install
+## 4. Install
 
 Make the script executable and run it as root:
 
@@ -55,7 +61,7 @@ The script will update the system, install osquery and filebeat, copy all config
 
 ---
 
-### 4. Verify
+## 5. Verify
 
 After the script finishes, check that filebeat can reach the server:
 
@@ -67,37 +73,22 @@ Expected result: `talk to server... OK`
 
 ---
 
-### 5. Export .ova
+## 6. [Optional] Export .ova
 
 Once verified, export the VM as an `.ova` file from VirtualBox and distribute it to participants.
 
 ---
 
-## Participant Workflow
+## 7. Run the start script
 
-### 1. Import the .ova
-
-Import the `.ova` file in VirtualBox and start the VM.
-
-### 2. Run the start script
+Run:
 
 ```bash
 chmod +x start.sh
 sudo ./start.sh
 ```
 
-The script will prompt you for a nickname, write it along with the machine ID into the filebeat config, and start osquery and filebeat.
+The script will prompt for a nickname, write it along with the machine ID into the filebeat config, and start osquery and filebeat.
 
----
 
-## Optional Manual Steps
-
-**Croatian keyboard layout**
-Settings → Keyboard → Add Input Source → Croatian
-
-**VS Code**
-Download the `.deb` from `https://code.visualstudio.com`, then:
-
-```bash
-sudo apt install ./code_*.deb
 ```

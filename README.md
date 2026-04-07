@@ -1,6 +1,12 @@
 # CTF Telemetry — Installation Guide
 
-## 1. Clone the repo
+This repo is cloned in two places:
+- **On the server** where Elasticsearch + Kibana will run
+- **On the Kali VM** where telemetry collection will be set up
+
+---
+
+## Clone the repo
 
 SSH (requires GitHub SSH key):
 ```bash
@@ -16,7 +22,7 @@ cd ctf_telemetry
 
 ---
 
-## 2. Follow the relevant setup guide
+## Setup guides
 
-- [Elastic Server Setup](https://github.com/Mariox222/ctf_telemetry/tree/main/elastic-setup) — deploy the Elasticsearch + Kibana stack on a server
-- [Kali Host Setup](https://github.com/Mariox222/ctf_telemetry/tree/main/kali-setup) — set up the Kali VM for telemetry collection
+- [Elastic Server Setup](https://github.com/Mariox222/ctf_telemetry/blob/main/elastic-setup/readme.md) — deploy the Elasticsearch + Kibana stack on the server
+- [Kali Host Setup](https://github.com/Mariox222/ctf_telemetry/blob/main/kali-setup/readme.md) — set up the Kali VM for telemetry collection
