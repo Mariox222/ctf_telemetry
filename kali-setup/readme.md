@@ -89,6 +89,3 @@ sudo ./start.sh
 ```
 
 The script will prompt for a nickname, write it along with the machine ID into the filebeat config, and start osquery and filebeat.
-
-
-```

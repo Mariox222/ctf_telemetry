@@ -16,11 +16,17 @@ The setup script reads your passwords and compose config from the local director
 
 ---
 
+Make sure you are in the `elastic-setup` directory:
+
+```bash
+cd elastic-setup/
+```
+
 ## 2. Prerequisites — Install Docker
 
-Docker must be installed before running the setup script. If it's not present, the script will exit with an error.
+Docker must be installed before running the setup script. If it's not present, the install script will exit with an error.
 
-Install Docker on Ubuntu:
+For installing Docker on Ubuntu, a script is prepared. For other systems use the [official Docker installation guide](https://docs.docker.com/engine/install/):
 
 ```bash
 chmod +x install-docker.sh
@@ -62,13 +68,25 @@ The install script will refuse to run if any password is missing or still set to
 
 ---
 
-## 4. Install
+## 4. Firewall
 
-Make sure you are in the `elastic-setup` directory:
+The Elasticsearch and Kibana services are open to the internet with the default config. To close them off, in `docker-compose.yml` change the Elasticsearch port binding from `9200:9200` to `127.0.0.1:9200:9200`. This makes Elasticsearch unreachable from outside the VM entirely. Use this if you don't need external access to port 9200.
 
-```bash
-cd elastic-setup
-```
+### Port reference
+
+| Port | Service | Who needs access |
+|------|---------|-----------------|
+| 22 | SSH | your machine |
+| 9200 | Elasticsearch | Kali host running Filebeat |
+| 5601 | Kibana | your browser |
+
+### UFW and Docker
+
+Note that Docker bypasses UFW rules with default config.
+
+---
+
+## 5. Install
 
 Make the script executable and run it:
 
@@ -77,11 +95,11 @@ chmod +x install.sh
 ./install.sh
 ```
 
-The script will configure the kernel, copy your config files, start the stack, set all passwords, and create the Filebeat user and role. Docker containers will run on startup.
+The script will configure the kernel, copy your config files, start the stack, set all passwords, and create the Filebeat user and role in the Elastic database. Docker containers will run on startup.
 
 ---
 
-## 5. Quick Verify
+## 6. Quick Verify
 
 Export passwords into your shell session:
 
@@ -105,37 +123,11 @@ http://<YOUR_SERVER_PUBLIC_IP>:5601
 
 Login with username `elastic` and the `ELASTIC_PASSWORD` from `.env`.
 
-> For more tests see the [Testing section](#8-testing) below.
+> For more tests see the [Testing section](#7-testing) below.
 
 ---
 
-## 7. Firewall
-
-### The UFW problem
-
-UFW is **not effective** for restricting Docker ports. Docker modifies iptables directly and bypasses UFW rules. Even if UFW shows port 9200 as blocked, Elasticsearch will still be publicly reachable.
-
-To actually restrict external access you have two options:
-
-**Option A — Cloud provider firewall (recommended)**
-
-Use your cloud provider's firewall/security group rules to control which IPs can reach port 9200. By default most providers only allow SSH (port 22). To allow Filebeat from a Kali host to ship logs, open port 9200 inbound from the Kali host's IP only.
-
-**Option B — Bind Elasticsearch to localhost**
-
-In `docker-compose.yml`, change the Elasticsearch port binding from `9200:9200` to `127.0.0.1:9200:9200`. This makes Elasticsearch unreachable from outside the VM entirely. Use this if you don't need external access to port 9200.
-
-### Port reference
-
-| Port | Service | Who needs access |
-|------|---------|-----------------|
-| 22 | SSH | your machine |
-| 9200 | Elasticsearch | Kali host running Filebeat |
-| 5601 | Kibana | your browser |
-
----
-
-## 8. Testing
+## 7. Testing
 
 Before running any test, export your passwords into the current shell session:
 
@@ -209,7 +201,7 @@ List all indices. After Filebeat starts shipping logs you will see indices whose
 curl -u elastic:$ELASTIC_PASSWORD "http://localhost:9200/_cat/indices?v"
 ```
 
-Search all documents in filebeat indices. Returns log documents or `hits.total: 0` if no logs have arrived yet.
+Search all documents in filebeat indices. Returns log documents if there are logs recvieved or `hits.total: 0` if no logs have been recieved yet.
 
 ```bash
 curl -u elastic:$ELASTIC_PASSWORD "http://localhost:9200/filebeat-*/_search?pretty"
@@ -231,7 +223,7 @@ docker logs -f elasticsearch
 
 ---
 
-## 9. Troubleshooting
+## 8. Troubleshooting
 
 ### "Kibana server is not ready yet"
 

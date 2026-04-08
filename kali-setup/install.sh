@@ -59,10 +59,15 @@ success "All required files found."
 # STEP 1 - System update and full upgrade
 # =============================================================================
 
-info "Updating and upgrading system..."
-apt-get update -y
-apt-get full-upgrade -y
-success "System up to date."
+read -rp "$(echo -e "\033[1;34m[INFO]\033[0m Run system update and full upgrade? [y/N]: ")" ans
+if [[ "$ans" =~ ^[Yy]$ ]]; then
+  info "Updating and upgrading system..."
+  apt-get update -y
+  apt-get full-upgrade -y
+  success "System up to date."
+else
+  warn "Skipping system update."
+fi
 
 # =============================================================================
 # STEP 2 - Install osquery
@@ -149,6 +154,7 @@ success "filebeat.yml installed and registry cleared."
 
 info "Creating CTF work folder..."
 mkdir -p "$CTF_WORK_FOLDER"
+chown "${SUDO_USER:-$USER}:${SUDO_USER:-$USER}" "$CTF_WORK_FOLDER"
 success "CTF_work_folder created at $CTF_WORK_FOLDER"
 
 # =============================================================================
@@ -186,14 +192,14 @@ echo ""
 echo "  Watch live filebeat logs:"
 echo "    sudo journalctl -u filebeat -f"
 echo ""
-echo "----------------------------------------------"
-echo "  Further recommended:"
-echo ""
-echo "  1. Croatian keyboard layout:"
-echo "       Settings -> Keyboard -> Add layout -> Croatian"
-echo ""
-echo "  2. VS Code:"
-echo "       Download from https://code.visualstudio.com"
-echo "       sudo apt install ./code_*.deb"
-echo "----------------------------------------------"
-echo ""
+"----------------------------------------------"
+"  Further recommended:"
+""
+"  1. Croatian keyboard layout:"
+"       Settings -> Keyboard -> Add layout -> Croatian"
+""
+"  2. VS Code:"
+"       Download from https://code.visualstudio.com"
+"       sudo apt install ./code_*.deb"
+"----------------------------------------------"
+""
