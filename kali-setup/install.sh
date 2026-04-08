@@ -20,7 +20,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 OSQUERY_DEB="osquery_5.21.0-1.linux_amd64.deb"
 MACADMINS_EXT="macadmins_extension.amd64.ext"
-CTF_WORK_FOLDER="$HOME/CTF_work_folder"
+REAL_HOME=$(getent passwd "${SUDO_USER:-$USER}" | cut -d: -f6)
+CTF_WORK_FOLDER="$REAL_HOME/CTF_work_folder"
 
 # =============================================================================
 # HELPERS
