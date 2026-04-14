@@ -101,7 +101,10 @@ info "Installing macadmins osquery extension..."
 cp "$SCRIPT_DIR/$MACADMINS_EXT" /etc/osquery/$MACADMINS_EXT
 chmod +x /etc/osquery/$MACADMINS_EXT
 
-success "macadmins extension copied to /etc/osquery/"
+echo "/etc/osquery/$MACADMINS_EXT" > /etc/osquery/extensions.load
+chown root:root /etc/osquery/extensions.load
+
+success "macadmins extension copied and extensions.load created."
 
 # =============================================================================
 # STEP 5 - Set log file permissions
