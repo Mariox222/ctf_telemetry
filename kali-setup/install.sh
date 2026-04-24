@@ -164,6 +164,11 @@ success "CTF_work_folder created at $CTF_WORK_FOLDER"
 # STEP 9 - Enable and start daemons
 # =============================================================================
 
+info "Clearing bash history so pre-installation commands are not tracked..."
+cat /dev/null > "$REAL_HOME/.bash_history"
+history -c 2>/dev/null || true
+success "Bash history cleared."
+
 info "Enabling and starting osqueryd..."
 systemctl enable osqueryd
 systemctl restart osqueryd

@@ -44,13 +44,18 @@ hosts: ["http://<YOUR_SERVER_IP>:9200"]
 password: "<FILEBEAT_USER_PASSWORD>"
 ```
 
-Save the file. The script copies it as-is to `/etc/filebeat/filebeat.yml`.
+Save the file.
 
 ---
 
 ## 4. Install
 
 Make the script executable and run it as root:
+
+> **Warning:** The script clears `~/.bash_history` before starting osqueryd so that pre-installation commands are not tracked. Back up your history first if you need it:
+> ```bash
+> cp ~/.bash_history ~/.bash_history.bak
+> ```
 
 ```bash
 chmod +x install.sh

@@ -44,6 +44,6 @@ success "Done. Logs will be tagged with participant_id: ${NICKNAME}, machine_id:
 echo ""
 echo "----------------------------------------------"
 echo "  Your CTF work folder is at ~/CTF_work_folder"
-echo "  Use it to store your notes, exploits and flags."
+echo "  Use it while solving challenges."
 echo "----------------------------------------------"
 echo ""
