@@ -134,6 +134,11 @@ command -v docker &>/dev/null \
   || die "Docker is not installed. Install it first before running this script."
 success "Docker found: $(docker --version)"
 
+info "Setting filebeat config file permissions..."
+chown root:root "$SCRIPT_DIR/filebeat-template.yml"
+chmod go-w "$SCRIPT_DIR/filebeat-template.yml"
+success "filebeat-template.yml permissions set."
+
 # =============================================================================
 # STEP 7 - Create CTF work folder
 # =============================================================================
@@ -176,8 +181,11 @@ echo ""
 echo "  Check osquery daemon status:"
 echo "    sudo systemctl status osqueryd"
 echo ""
+echo "  Verify filebeat can reach the server:"
+echo "    sudo docker exec kali-setup-filebeat-1 filebeat test output"
+echo ""
 echo "  Watch live filebeat logs:"
-echo "    docker logs -f filebeat"
+echo "    sudo docker logs -f kali-setup-filebeat-1"
 echo ""
 echo "----------------------------------------------"
 echo "  Next step: run start.sh to set participant ID"
