@@ -53,6 +53,9 @@ info "Checking required files..."
 [[ -f "$SCRIPT_DIR/filebeat-template.yml" ]] \
   || die "filebeat-template.yml not found in $SCRIPT_DIR. Edit it with server IP and password before running."
 
+[[ -f "$SCRIPT_DIR/docker-compose.yml" ]] \
+  || die "docker-compose.yml not found in $SCRIPT_DIR."
+
 success "All required files found."
 
 # =============================================================================
@@ -123,36 +126,16 @@ chmod o+r /var/log/osquery/osqueryd.results.log 2>/dev/null || true
 success "Read access granted to /var/log/osquery/osqueryd.results.log"
 
 # =============================================================================
-# STEP 6 - Install filebeat
+# STEP 6 - Check Docker is installed
 # =============================================================================
 
-info "Installing filebeat..."
-
-wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch \
-  | gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] \
-  https://artifacts.elastic.co/packages/9.x/apt stable main" \
-  | tee /etc/apt/sources.list.d/elastic-9.x.list > /dev/null
-apt-get update -y
-apt-get install -y filebeat=9.3.1
-
-success "filebeat installed: $(filebeat version)"
+info "Checking for Docker..."
+command -v docker &>/dev/null \
+  || die "Docker is not installed. Install it first before running this script."
+success "Docker found: $(docker --version)"
 
 # =============================================================================
-# STEP 7 - Configure filebeat
-# =============================================================================
-
-info "Configuring filebeat..."
-
-cp "$SCRIPT_DIR/filebeat-template.yml" /etc/filebeat/filebeat.yml
-
-# Clear registry so filebeat ships all logs fresh on first start
-rm -rf /var/lib/filebeat/registry
-
-success "filebeat.yml installed and registry cleared."
-
-# =============================================================================
-# STEP 8 - Create CTF work folder
+# STEP 7 - Create CTF work folder
 # =============================================================================
 
 info "Creating CTF work folder..."
@@ -174,10 +157,9 @@ systemctl enable osqueryd
 systemctl restart osqueryd
 success "osqueryd running."
 
-info "Enabling and starting filebeat..."
-systemctl enable filebeat
-systemctl restart filebeat
-success "filebeat running."
+info "Starting filebeat via Docker..."
+docker compose -f "$SCRIPT_DIR/docker-compose.yml" up -d filebeat
+success "filebeat container started."
 
 # =============================================================================
 # DONE
@@ -189,16 +171,13 @@ echo "  Kali host setup complete!"
 echo "=============================================="
 echo ""
 echo "  osqueryd  : $(systemctl is-active osqueryd)"
-echo "  filebeat  : $(systemctl is-active filebeat)"
+echo "  filebeat  : $(docker compose -f "$SCRIPT_DIR/docker-compose.yml" ps -q filebeat &>/dev/null && echo running || echo stopped)"
 echo ""
-echo "  Check osquery daemon status"
+echo "  Check osquery daemon status:"
 echo "    sudo systemctl status osqueryd"
 echo ""
-echo "  Verify filebeat can reach the server:"
-echo "    sudo filebeat test output"
-echo ""
 echo "  Watch live filebeat logs:"
-echo "    sudo journalctl -u filebeat -f"
+echo "    docker logs -f filebeat"
 echo ""
 echo "----------------------------------------------"
 echo "  Next step: run start.sh to set participant ID"

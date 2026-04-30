@@ -1,14 +1,15 @@
 #!/bin/bash
 set -euo pipefail
 
-FILEBEAT_CONFIG="/etc/filebeat/filebeat.yml"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+FILEBEAT_CONFIG="$SCRIPT_DIR/filebeat-template.yml"
 
 info()    { echo -e "\n\033[1;34m[INFO]\033[0m $*"; }
 success() { echo -e "\033[1;32m[OK]\033[0m $*"; }
 die()     { echo -e "\033[1;31m[ERROR]\033[0m $*" >&2; exit 1; }
 
 [[ $EUID -eq 0 ]] || die "Run this script with sudo."
-[[ -f "$FILEBEAT_CONFIG" ]] || die "filebeat.yml not found at $FILEBEAT_CONFIG. Is filebeat installed?"
+[[ -f "$FILEBEAT_CONFIG" ]] || die "filebeat-template.yml not found at $FILEBEAT_CONFIG."
 
 # Prompt for nickname
 echo ""
@@ -36,8 +37,8 @@ else
   success "osqueryd started."
 fi
 
-info "Restarting filebeat..."
-systemctl restart filebeat
+info "Restarting filebeat container..."
+docker compose -f "$SCRIPT_DIR/docker-compose.yml" restart filebeat
 
 success "Done. Logs will be tagged with participant_id: ${NICKNAME}, machine_id: ${MACHINE_ID}"
 

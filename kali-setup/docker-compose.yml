@@ -1,0 +1,12 @@
+services:
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:9.3.1
+    user: root
+    volumes:
+      - ./filebeat-template.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/log/osquery:/var/log/osquery:ro
+      - filebeat_registry:/usr/share/filebeat/data
+    restart: unless-stopped
+
+volumes:
+  filebeat_registry:
