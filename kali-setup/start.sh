@@ -38,7 +38,7 @@ else
 fi
 
 info "Restarting filebeat container..."
-docker compose -f "$SCRIPT_DIR/docker-compose.yml" restart filebeat
+docker-compose -f "$SCRIPT_DIR/docker-compose.yml" restart filebeat
 
 success "Done. Logs will be tagged with participant_id: ${NICKNAME}, machine_id: ${MACHINE_ID}"
 

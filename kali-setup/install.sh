@@ -62,11 +62,10 @@ success "All required files found."
 # STEP 1 - System update and full upgrade
 # =============================================================================
 
-read -rp "$(echo -e "\033[1;34m[INFO]\033[0m Run system update and full upgrade? [y/N]: ")" ans
+read -rp "$(echo -e "\033[1;34m[INFO]\033[0m Run apt-get update? [y/N]: ")" ans
 if [[ "$ans" =~ ^[Yy]$ ]]; then
-  info "Updating and upgrading system..."
+  info "Updating system..."
   apt-get update -y
-  apt-get full-upgrade -y
   success "System up to date."
 else
   warn "Skipping system update."
@@ -131,7 +130,7 @@ success "Read access granted to /var/log/osquery/osqueryd.results.log"
 
 info "Checking for Docker..."
 command -v docker &>/dev/null \
-  || die "Docker is not installed. Install it first before running this script."
+  || die "Docker is not installed. Install it first before running this script. install_docker.sh script is prepared in this directory."
 success "Docker found: $(docker --version)"
 
 info "Setting filebeat config file permissions..."
@@ -163,7 +162,7 @@ systemctl restart osqueryd
 success "osqueryd running."
 
 info "Starting filebeat via Docker..."
-docker compose -f "$SCRIPT_DIR/docker-compose.yml" up -d filebeat
+docker-compose -f "$SCRIPT_DIR/docker-compose.yml" up -d filebeat
 success "filebeat container started."
 
 # =============================================================================
@@ -176,7 +175,7 @@ echo "  Kali host setup complete!"
 echo "=============================================="
 echo ""
 echo "  osqueryd  : $(systemctl is-active osqueryd)"
-echo "  filebeat  : $(docker compose -f "$SCRIPT_DIR/docker-compose.yml" ps -q filebeat &>/dev/null && echo running || echo stopped)"
+echo "  filebeat  : $(docker-compose -f "$SCRIPT_DIR/docker-compose.yml" ps -q filebeat &>/dev/null && echo running || echo stopped)"
 echo ""
 echo "  Check osquery daemon status:"
 echo "    sudo systemctl status osqueryd"

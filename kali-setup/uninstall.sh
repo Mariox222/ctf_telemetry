@@ -27,7 +27,7 @@ confirm() {
 # =============================================================================
 
 if confirm "Stop and remove filebeat Docker container?"; then
-  docker compose -f "$SCRIPT_DIR/docker-compose.yml" down -v 2>/dev/null || true
+  docker-compose -f "$SCRIPT_DIR/docker-compose.yml" down -v 2>/dev/null || true
   success "filebeat container stopped and removed."
 else
   skip "filebeat container left running."
