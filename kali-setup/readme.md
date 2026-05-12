@@ -19,6 +19,7 @@ cd kali-setup
 Make sure all of the following are in the same directory:
 
 - `install.sh`
+- `docker-compose.yml`
 - `osquery_5.21.0-1.linux_amd64.deb`
 - `macadmins_extension.amd64.ext`
 - `osquery.conf`

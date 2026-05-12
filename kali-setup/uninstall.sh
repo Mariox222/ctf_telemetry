@@ -6,6 +6,7 @@
 
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MACADMINS_EXT="macadmins_extension.amd64.ext"
 REAL_HOME=$(getent passwd "${SUDO_USER:-$USER}" | cut -d: -f6)
 CTF_WORK_FOLDER="$REAL_HOME/CTF_work_folder"
@@ -22,16 +23,19 @@ confirm() {
 [[ $EUID -eq 0 ]] || { echo "Run this script with sudo."; exit 1; }
 
 # =============================================================================
-# STEP 1 - Stop and disable daemons
+# STEP 1 - Stop and remove filebeat container
 # =============================================================================
 
-if confirm "Stop and disable filebeat?"; then
-  systemctl stop filebeat    2>/dev/null || true
-  systemctl disable filebeat 2>/dev/null || true
-  success "filebeat stopped and disabled."
+if confirm "Stop and remove filebeat Docker container?"; then
+  docker compose -f "$SCRIPT_DIR/docker-compose.yml" down -v 2>/dev/null || true
+  success "filebeat container stopped and removed."
 else
-  skip "filebeat left running."
+  skip "filebeat container left running."
 fi
+
+# =============================================================================
+# STEP 2 - Stop and disable osqueryd
+# =============================================================================
 
 if confirm "Stop and disable osqueryd?"; then
   systemctl stop osqueryd    2>/dev/null || true
@@ -42,33 +46,7 @@ else
 fi
 
 # =============================================================================
-# STEP 2 - Remove filebeat package and apt source
-# =============================================================================
-
-if confirm "Remove filebeat package and its apt source?"; then
-  apt-get remove --purge -y filebeat 2>/dev/null || true
-  rm -f /etc/apt/sources.list.d/elastic-9.x.list
-  rm -f /usr/share/keyrings/elasticsearch-keyring.gpg
-  apt-get autoremove -y
-  success "filebeat package removed."
-else
-  skip "filebeat package left installed."
-fi
-
-# =============================================================================
-# STEP 3 - Remove filebeat config and registry
-# =============================================================================
-
-if confirm "Remove filebeat config and registry (/etc/filebeat, /var/lib/filebeat)?"; then
-  rm -rf /etc/filebeat
-  rm -rf /var/lib/filebeat
-  success "filebeat config and registry removed."
-else
-  skip "filebeat config left in place."
-fi
-
-# =============================================================================
-# STEP 4 - Remove osquery package
+# STEP 3 - Remove osquery package
 # =============================================================================
 
 if confirm "Remove osquery package?"; then
@@ -79,7 +57,7 @@ else
 fi
 
 # =============================================================================
-# STEP 5 - Remove osquery config and logs
+# STEP 4 - Remove osquery config and logs
 # =============================================================================
 
 if confirm "Remove osquery config and logs (/etc/osquery, /var/log/osquery)?"; then
@@ -91,7 +69,7 @@ else
 fi
 
 # =============================================================================
-# STEP 6 - Remove CTF work folder
+# STEP 5 - Remove CTF work folder
 # =============================================================================
 
 if confirm "Remove CTF work folder ($CTF_WORK_FOLDER)?"; then
@@ -110,20 +88,3 @@ echo "=============================================="
 echo "  Uninstall complete."
 echo "=============================================="
 echo ""
-
-# filebeat:
-
-# systemctl status filebeat
-# filebeat version
-# ls /etc/filebeat
-# ls /var/lib/filebeat
-
-# osquery:
-
-# systemctl status osqueryd
-# osqueryi --version
-# ls /etc/osquery
-# ls /var/log/osquery
-# CTF work folder:
-
-# ls ~/CTF_work_folder
