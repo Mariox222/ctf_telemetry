@@ -6,7 +6,7 @@ Sets up osquery + filebeat on a fresh Kali Linux VM to send telemetry to the Ela
 
 ---
 
-## 1. Clone the kali-setup folder from this repo and cd into it
+## 1. Clone the kali-setup folder and cd into it
 
 ```bash
 git clone --no-checkout --depth=1 https://github.com/Mariox222/ctf_telemetry.git

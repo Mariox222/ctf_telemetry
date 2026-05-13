@@ -16,7 +16,7 @@ The setup script reads your passwords and compose config from the local director
 
 ---
 
-## 1. Clone the elastic-stup directory and cd into it
+## 1. Clone the elastic-setup directory and cd into it
 
 ```bash
 git clone --no-checkout --depth=1 https://github.com/Mariox222/ctf_telemetry.git
