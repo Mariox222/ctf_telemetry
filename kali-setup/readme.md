@@ -6,30 +6,20 @@ Sets up osquery + filebeat on a fresh Kali Linux VM to send telemetry to the Ela
 
 ---
 
-## 1. Go to the kali-setup folder
+## 1. Clone the kali-setup folder from this repo and cd into it
 
 ```bash
+git clone --no-checkout --depth=1 https://github.com/Mariox222/ctf_telemetry.git
+cd ctf_telemetry
+git sparse-checkout init --cone
+git sparse-checkout set kali-setup
+git checkout
 cd kali-setup
 ```
 
 ---
 
-## 2. Required Files
-
-Make sure all of the following are in the same directory:
-
-- `install.sh`
-- `docker-compose.yml`
-- `osquery_5.21.0-1.linux_amd64.deb`
-- `macadmins_extension.amd64.ext`
-- `osquery.conf`
-- `osquery.flags`
-- `filebeat-template.yml`
-- `start.sh`
-
----
-
-## 3. Edit filebeat-template.yml
+## 2. Edit filebeat-template.yml
 
 Open `filebeat-template.yml` and fill in two values before running the script:
 
@@ -49,7 +39,7 @@ Save the file.
 
 ---
 
-## 4. Install
+## 3. Install
 
 Make the script executable and run it as root:
 
@@ -67,7 +57,7 @@ The script will update the system, install osquery and filebeat, copy all config
 
 ---
 
-## 5. Verify
+## 4. Verify
 
 After the script finishes, check that filebeat can reach the server:
 
@@ -79,13 +69,13 @@ Expected result: `talk to server... OK`
 
 ---
 
-## 6. [Optional] Export .ova
+## 5. [Optional] Export .ova
 
 Once verified, export the VM as an `.ova` file from VirtualBox and distribute it to participants.
 
 ---
 
-## 7. Run the start script
+## 6. Run the start script
 
 Run:
 

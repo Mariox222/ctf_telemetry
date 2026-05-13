@@ -4,7 +4,7 @@ A scripted setup for a single-node Elasticsearch + Kibana stack running in Docke
 
 ---
 
-## 1. Description
+## Description
 
 This repo sets up the following on a fresh linux system:
 
@@ -16,11 +16,19 @@ The setup script reads your passwords and compose config from the local director
 
 ---
 
-Make sure you are in the `elastic-setup` directory:
+## 1. Clone the elastic-stup directory and cd into it
 
 ```bash
-cd elastic-setup/
+git clone --no-checkout --depth=1 https://github.com/Mariox222/ctf_telemetry.git
+cd ctf_telemetry
+git sparse-checkout init --cone
+git sparse-checkout set elastic-setup
+git checkout
+cd elastic-setup
+
 ```
+
+---
 
 ## 2. Prerequisites — Install Docker
 
