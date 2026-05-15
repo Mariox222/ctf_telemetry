@@ -148,6 +148,18 @@ chown "${SUDO_USER:-$USER}:${SUDO_USER:-$USER}" "$CTF_WORK_FOLDER"
 success "CTF_work_folder created at $CTF_WORK_FOLDER"
 
 # =============================================================================
+# STEP 8 - Configure zsh history for real-time osquery visibility
+# =============================================================================
+
+info "Configuring zsh history..."
+ZSHRC="$REAL_HOME/.zshrc"
+touch "$ZSHRC"
+grep -qxF 'setopt EXTENDED_HISTORY'   "$ZSHRC" || echo 'setopt EXTENDED_HISTORY'   >> "$ZSHRC"
+grep -qxF 'setopt INC_APPEND_HISTORY' "$ZSHRC" || echo 'setopt INC_APPEND_HISTORY' >> "$ZSHRC"
+chown "${SUDO_USER:-$USER}:${SUDO_USER:-$USER}" "$ZSHRC"
+success "zsh history options set in $ZSHRC"
+
+# =============================================================================
 # STEP 9 - Enable and start daemons
 # =============================================================================
 
