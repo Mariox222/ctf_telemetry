@@ -58,6 +58,14 @@ info "Checking required files..."
 
 success "All required files found."
 
+info "Checking for Docker and docker-compose..."
+command -v docker &>/dev/null \
+  || die "Docker is not installed. Run install_docker.sh first."
+command -v docker-compose &>/dev/null \
+  || die "docker-compose is not installed. Run install_docker.sh first."
+success "Docker found: $(docker --version)"
+success "docker-compose found: $(docker-compose --version)"
+
 # =============================================================================
 # STEP 1 - System update and full upgrade
 # =============================================================================
@@ -125,13 +133,8 @@ chmod o+r /var/log/osquery/osqueryd.results.log 2>/dev/null || true
 success "Read access granted to /var/log/osquery/osqueryd.results.log"
 
 # =============================================================================
-# STEP 6 - Check Docker is installed
+# STEP 6 - Set filebeat config permissions
 # =============================================================================
-
-info "Checking for Docker..."
-command -v docker &>/dev/null \
-  || die "Docker is not installed. Install it first before running this script. install_docker.sh script is prepared in this directory."
-success "Docker found: $(docker --version)"
 
 info "Setting filebeat config file permissions..."
 chown root:root "$SCRIPT_DIR/filebeat-template.yml"
