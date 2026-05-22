@@ -160,7 +160,7 @@ curl -s -u "elastic:${ELASTIC_PASSWORD}" \
     "cluster": ["monitor", "manage_index_templates", "manage_ilm"],
     "indices": [
       {
-        "names": ["filebeat-*"],
+        "names": ["filebeat-*", "burp-traffic"],
         "privileges": ["create_index", "create_doc", "write"]
       }
     ]
