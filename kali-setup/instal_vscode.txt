@@ -1,0 +1,5 @@
+sudo apt install ./code_1.124.2-1781225536_amd64.deb
+
+# On older Linux distributions, run these commands instead:
+# sudo dpkg -i <file>.deb
+# sudo apt-get install -f # Install dependencies
