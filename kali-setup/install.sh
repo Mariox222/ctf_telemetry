@@ -67,7 +67,7 @@ success "Docker found: $(docker --version)"
 success "docker-compose found: $(docker-compose --version)"
 
 # =============================================================================
-# STEP 1 - System update and full upgrade
+# STEP 1 - System update 
 # =============================================================================
 
 read -rp "$(echo -e "\033[1;34m[INFO]\033[0m Run apt-get update? [y/N]: ")" ans
