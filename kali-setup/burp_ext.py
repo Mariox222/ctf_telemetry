@@ -16,8 +16,8 @@ class BurpExtender(IBurpExtender, IHttpListener):
         # Register HTTP listener
         callbacks.registerHttpListener(self)
         # Elasticsearch setup
-        self.es_url = 'http://51.107.3.131:9200/burp-traffic/_doc/'
-        self.es_auth = base64.b64encode('filebeat_user:ZtTiwDQFXaoRx1qMe5/kbaJkjPIboMVS').decode('utf-8')
+        self.es_url = 'http://<IP>/burp-traffic/_doc/'
+        self.es_auth = base64.b64encode('filebeat_user:<FILEBEATUSERPASSWORD>').decode('utf-8')
         self._stdout.println("Elasticsearch Logger extension loaded")
 
     def processHttpMessage(self, toolFlag, messageIsRequest, messageInfo):

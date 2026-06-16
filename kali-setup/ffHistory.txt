@@ -1,1 +1,1 @@
-/home/kali/.mozilla/firefox/<profile-id>/places.sqlite
+cp /home/kali/.mozilla/firefox/<profile-id>/places.sqlite /home/kali/places.sqlite
